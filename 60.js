@@ -72,10 +72,32 @@ for(var i = 2; true; i++) {
                     continue;
                 }
 
-                // permute vals and take 4
-                var permutationsOfVals = getCombinations(vals.map(n => n));
+                var checkCount = vals.reduce((a, c) => {
+                    a[c] = 1;
+                    return a;
+                }, {});
+                checkCount[p] = 1;
 
-                console.log(permutationsOfVals);
+                vals.forEach(vv => {
+                    checkCount[vv]++;
+                    var sande = Object.values(startsAndEnds[vv]);
+                    sande.forEach(sae => {
+                        if (checkCount[sae]) {
+                            checkCount[sae]++;
+                        }
+                    });
+                });
+                
+                var goodVals = Object.entries(checkCount).filter(e => e[1] >= LEN).map(e => e[0]);
+
+                if (goodVals.length < LEN-1) {
+                    continue;
+                }
+
+                // permute vals and take 4
+                var permutationsOfVals = getCombinations(goodVals);
+
+                //console.log(p, goodVals);
 
                 permutationsOfVals.forEach(pov => {
                     var mapCount = pov.reduce((a, c) => {
