@@ -1,6 +1,10 @@
 function determinePeriod(n) {
     var startDigit = Math.floor(Math.sqrt(n));
 
+    if (Math.sqrt(n) == startDigit) {
+        return 0;
+    }
+
     var fractionDigits = [];
     var subs = [];
     var denoms = [];
@@ -9,7 +13,6 @@ function determinePeriod(n) {
         if (!b) {
           return a;
         }
-      
         return gcd(b, a % b);
       }
 
@@ -35,7 +38,7 @@ function determinePeriod(n) {
 
         // solve
         // sub / newDenom = newFractionDigit - newSub / newDeom;
-        for(var nfd = 9; nfd >= 1; nfd--) {
+        for(var nfd = n; nfd >= 1; nfd--) {
             var ns = sub - nfd*newDenom;
             if (ns < 0 && Math.abs(ns) <= startDigit) {
                 newSub = Math.abs(ns);
@@ -44,25 +47,27 @@ function determinePeriod(n) {
             }
         }
 
-        console.log(newFractionDigit, newSub, newDenom);
         fractionDigits.push(newFractionDigit);
         subs.push(newSub);
         denoms.push(newDenom);
     }
 
     calculateNextValues(startDigit, 1);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
-    calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
 
-    // while(!checkSequenceFound()) {
-    //     calculateNextValues(fractionDigits[fractionDigits.length-1], subs[subs.length-1], denoms[denoms.length-1]);
-    // }
+    while(!checkSequenceFound()) {
+        calculateNextValues(subs[subs.length-1], denoms[denoms.length-1]);
+    }
+
+    return fractionDigits.length-1;
 }
 
-determinePeriod(23);
+var odd = 0;
+
+for(var x = 2; x <= 10000; x++) {
+    var period = determinePeriod(x);
+    if (period % 2 == 1) {
+        odd++;
+    }
+}
+
+console.log(odd);
