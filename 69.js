@@ -29,10 +29,6 @@ function primeFactors(n) {
         }
     }
 
-    if (n == 10) {
-        console.log(factors, recipricols);
-    }
-
     recipricols.forEach(r => {
         if (!factors[r]) {
             var recip = r;
